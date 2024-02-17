@@ -1,3 +1,20 @@
+namespace SpriteKind {
+    export const menu_fight_button = SpriteKind.create()
+    export const menu_run_button = SpriteKind.create()
+    export const cursor = SpriteKind.create()
+}
+sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_fight_button, function (sprite, otherSprite) {
+    if (controller.A.isPressed()) {
+        isRun = 0
+        isFight = 1
+    }
+})
+sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_run_button, function (sprite, otherSprite) {
+    if (controller.A.isPressed()) {
+        isRun = 1
+        isFight = 0
+    }
+})
 function createCursor () {
     cursor = sprites.create(img`
         . . . . . . f f f f . . . . . . . 
@@ -12,9 +29,36 @@ function createCursor () {
         f f 1 1 1 1 1 f f f f f . . . . . 
         . f f 1 1 1 1 1 1 1 f . . . . . . 
         . . f f f f f f f f f . . . . . . 
-        `, SpriteKind.Player)
+        `, SpriteKind.cursor)
     tiles.placeOnTile(cursor, tiles.getTileLocation(7, 5))
     controller.moveSprite(cursor)
+}
+function createMenu () {
+    fight = sprites.create(img`
+        ............................
+        .......111..................
+        ......1...1.................
+        .....1.....1................
+        ....1......1................
+        ....1............1.....1....
+        ....1............1.....1....
+        ....1.....1......1.....1....
+        ....1111.........1...11111..
+        ....1............1.....1....
+        ....1.....1..11..111...1....
+        ....1.....1.1..1.1..1..1....
+        ....1.....1.1..1.1..1..1....
+        ....1.....1.1..1.1..1..1....
+        ....1.....1..111.1..1...11..
+        ...............1............
+        ...............1............
+        ...............1............
+        ............111.............
+        ............................
+        `, SpriteKind.menu_fight_button)
+    tiles.placeOnTile(fight, tiles.getTileLocation(5, 4))
+    run = sprites.create(assets.image`run`, SpriteKind.menu_run_button)
+    tiles.placeOnTile(run, tiles.getTileLocation(5, 6))
 }
 function createScene () {
     scene.setBackgroundColor(15)
@@ -142,6 +186,11 @@ function createScene () {
         `)
     tiles.setCurrentTilemap(tilemap`level1`)
 }
+let run: Sprite = null
+let fight: Sprite = null
 let cursor: Sprite = null
+let isFight = 0
+let isRun = 0
 createScene()
 createCursor()
+createMenu()
