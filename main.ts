@@ -35,9 +35,9 @@ function createCursor () {
 }
 function createMenu () {
     fight = sprites.create(assets.image`fight`, SpriteKind.menu_fight_button)
-    tiles.placeOnTile(fight, tiles.getTileLocation(6, 4))
+    tiles.placeOnTile(fight, tiles.getTileLocation(5, 4))
     run = sprites.create(assets.image`run`, SpriteKind.menu_run_button)
-    tiles.placeOnTile(run, tiles.getTileLocation(6, 6))
+    tiles.placeOnTile(run, tiles.getTileLocation(5, 5))
 }
 function createScene () {
     scene.setBackgroundColor(15)
