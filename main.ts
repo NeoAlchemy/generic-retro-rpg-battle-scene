@@ -451,6 +451,20 @@ function createFightMenu () {
         tiles.placeOnTile(Dino_2_Button, tiles.getTileLocation(6, 5))
     }
 }
+// TODO:
+// - Implement run away animation where hero goes to the right off screen
+// - Create Magic button on Main Menu and create Magic Menu
+// - Give Dinos an attack turn
+// - Randomize attack value based on a "20 sided dice". (requires conversation)
+// - Create Item button on Main Menu and create Item Menu
+// - Decorations at top based on surroundings
+// 
+// LATER:
+// Implement an RPG world
+// Genericize Enemies not dino specific
+// Resize boxes
+// Allow for multiple heros
+// Allow for 1 - N enemies
 let run: Sprite = null
 let fight: Sprite = null
 let cursor: Sprite = null
