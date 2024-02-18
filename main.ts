@@ -10,10 +10,14 @@ function doEnemiesTurn () {
     roll20SidedDice()
     if (twentySidedDice > 2) {
         doDino1FightAnimation()
+        pause(500)
+        scene.cameraShake(4, 500)
     }
     roll20SidedDice()
     if (twentySidedDice > 2) {
         doDino2FightAnimation()
+        pause(500)
+        scene.cameraShake(4, 500)
     }
 }
 function destroyFightMenu () {
@@ -27,7 +31,7 @@ function destroyFightMenu () {
     sprites.destroy(Dino_2_Button)
 }
 function createHeroes () {
-    twentySidedDice = sprites.create(img`
+    heros = sprites.create(img`
         ...............ff.......
         .............ff2ffff....
         ............ff2feeeeff..
@@ -45,7 +49,7 @@ function createHeroes () {
         ..........c...ffffffff..
         ...............ff..fff..
         `, SpriteKind.Hero)
-    tiles.placeOnTile(twentySidedDice, tiles.getTileLocation(8, 1))
+    tiles.placeOnTile(heros, tiles.getTileLocation(8, 1))
 }
 sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_fight_dino1_button, function (sprite, otherSprite) {
     if (controller.A.isPressed()) {
@@ -55,11 +59,13 @@ sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_fight_dino1_button, functio
         createMenu()
         shakeDino(Dino_1)
         doHeroFightAnimation()
+        pause(500)
+        doEnemiesTurn()
     }
 })
 function doHeroFightAnimation () {
     animation.runImageAnimation(
-    twentySidedDice,
+    heros,
     [img`
         ..............ffffff....
         .............f2feeeeff..
@@ -165,7 +171,7 @@ function doHeroFightAnimation () {
     true
     )
     pause(500)
-    animation.stopAnimation(animation.AnimationTypes.All, twentySidedDice)
+    animation.stopAnimation(animation.AnimationTypes.All, heros)
 }
 function doDino2FightAnimation () {
     animation.runImageAnimation(
@@ -320,8 +326,33 @@ function doDino2FightAnimation () {
         ...ccbbbcbddddccdddc....
         .....ccccdd555dccccc....
         ........cccccccc........
+        `,img`
+        ........................
+        ........................
+        ...........ccc..........
+        ...........cccc.........
+        .......ccc..ccccccc.....
+        .......cccccc555555cc...
+        ........ccb5555555555c..
+        .....cc..b555555555555c.
+        .....cccb555555ff155555c
+        ......cb55555555ff55d55c
+        ......b5555555555555555c
+        ...cc.b555dd5555bb13bbc.
+        ...cccd55ddddd555b3335c.
+        .....bdddddddddd55b335c.
+        ..cccdddddb55bbddd5555c.
+        ..cccdddddb555bbbbcccc..
+        ...ccddddddb5555cbcdc...
+        ccccbdddddd5cb55cbcc....
+        cddddddddd5555ccbbc.....
+        .cddddddbdd555bbbcc.....
+        ..ccdddbbbdd55cbcdc.....
+        ....ccbbcbddddccdddcc...
+        ......cccdd555dcccccc...
+        ........cccccccc........
         `],
-    500,
+    100,
     false
     )
 }
@@ -423,6 +454,8 @@ sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_fight_dino2_button, functio
         createMenu()
         shakeDino(Dino_2)
         doHeroFightAnimation()
+        pause(500)
+        doEnemiesTurn()
     }
 })
 function createCursor () {
@@ -606,8 +639,33 @@ function doDino1FightAnimation () {
         ...ccbbbcbddddccdddc....
         .....ccccdd555dccccc....
         ........cccccccc........
+        `,img`
+        ........................
+        ........................
+        ...........ccc..........
+        ...........cccc.........
+        .......ccc..ccccccc.....
+        .......cccccc555555cc...
+        ........ccb5555555555c..
+        .....cc..b555555555555c.
+        .....cccb555555ff155555c
+        ......cb55555555ff55d55c
+        ......b5555555555555555c
+        ...cc.b555dd5555bb13bbc.
+        ...cccd55ddddd555b3335c.
+        .....bdddddddddd55b335c.
+        ..cccdddddb55bbddd5555c.
+        ..cccdddddb555bbbbcccc..
+        ...ccddddddb5555cbcdc...
+        ccccbdddddd5cb55cbcc....
+        cddddddddd5555ccbbc.....
+        .cddddddbdd555bbbcc.....
+        ..ccdddbbbdd55cbcdc.....
+        ....ccbbcbddddccdddcc...
+        ......cccdd555dcccccc...
+        ........cccccccc........
         `],
-    500,
+    100,
     false
     )
 }
@@ -804,6 +862,7 @@ let isFight = 0
 let isRun = 0
 let Dino_2: Sprite = null
 let Dino_1: Sprite = null
+let heros: Sprite = null
 let Dino_2_Button: Sprite = null
 let Dino_2_Status_Bar: StatusBarSprite = null
 let Dino_1_Button: Sprite = null
