@@ -4,6 +4,7 @@ namespace SpriteKind {
     export const cursor = SpriteKind.create()
     export const menu_fight_dino1_button = SpriteKind.create()
     export const Hero = SpriteKind.create()
+    export const menu_fight_dino2_button = SpriteKind.create()
 }
 function MakeEnemies () {
     Dino_1 = sprites.create(img`
@@ -98,9 +99,13 @@ sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_fight_dino1_button, functio
         sprites.destroy(Dino_2_Button)
         pause(250)
         createMenu()
-        if (Dino_1_Status_Bar.value <= 0) {
-            sprites.destroy(Dino_1, effects.fire, 500)
-        }
+        Dino_1.setVelocity(-50, 0)
+        pause(100)
+        Dino_1.setVelocity(0, 0)
+        pause(50)
+        Dino_1.setVelocity(50, 0)
+        pause(103)
+        Dino_1.setVelocity(0, 0)
     }
 })
 sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_fight_button, function (sprite, otherSprite) {
@@ -110,11 +115,17 @@ sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_fight_button, function (spr
         pause(250)
         Fight()
     }
+    if (Dino_1_Status_Bar.value <= 0) {
+        sprites.destroy(Dino_1, effects.fire, 500)
+    }
 })
 sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_run_button, function (sprite, otherSprite) {
     if (controller.A.isPressed()) {
         isRun = 1
         isFight = 0
+    }
+    if (Dino_2_Status_Bar.value <= 0) {
+        sprites.destroy(Dino_2, effects.fire, 500)
     }
 })
 function Fight () {
@@ -157,10 +168,29 @@ function Fight () {
             ..................................................
             ..................................................
             ..................................................
-            `, SpriteKind.Player)
+            `, SpriteKind.menu_fight_dino2_button)
         tiles.placeOnTile(Dino_2_Button, tiles.getTileLocation(6, 5))
     }
 }
+sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_fight_dino2_button, function (sprite, otherSprite) {
+    if (Dino_2_Status_Bar.value <= 0) {
+        sprites.destroy(Dino_2_Button)
+    }
+    if (controller.A.isPressed()) {
+        Dino_2_Status_Bar.value += randint(-20, -30)
+        sprites.destroy(Dino_1_Button)
+        sprites.destroy(Dino_2_Button)
+        pause(250)
+        createMenu()
+        Dino_2.setVelocity(-50, 0)
+        pause(100)
+        Dino_2.setVelocity(0, 0)
+        pause(50)
+        Dino_2.setVelocity(50, 0)
+        pause(103)
+        Dino_2.setVelocity(0, 0)
+    }
+})
 function createCursor () {
     cursor = sprites.create(img`
         . . . . . . f f f f . . . . . . . 
@@ -327,3 +357,10 @@ createScene()
 createCursor()
 createMenu()
 MakeEnemies()
+game.onUpdateInterval(50, function () {
+    if (Dino_1_Status_Bar.value <= 0) {
+        if (Dino_2_Status_Bar.value <= 0) {
+            game.gameOver(true)
+        }
+    }
+})
