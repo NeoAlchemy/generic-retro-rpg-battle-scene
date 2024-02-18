@@ -6,7 +6,70 @@ namespace SpriteKind {
     export const Hero = SpriteKind.create()
     export const menu_fight_dino2_button = SpriteKind.create()
 }
-function MakeEnemies () {
+function destroyFightMenu () {
+    if (Dino_1_Status_Bar.value <= 0) {
+        sprites.destroy(Dino_1_Button)
+    }
+    if (Dino_2_Status_Bar.value <= 0) {
+        sprites.destroy(Dino_2_Button)
+    }
+    sprites.destroy(Dino_1_Button)
+    sprites.destroy(Dino_2_Button)
+}
+function createHeroes () {
+    Hero = sprites.create(img`
+        ...............ff.......
+        .............ff2ffff....
+        ............ff2feeeeff..
+        ...........ff22feeeeeff.
+        ...........feeeeffeeeef.
+        ..........fe2222eefffff.
+        ..........f2effff222efff
+        ..........fffeeeffffffff
+        ..........fee44fbe44efef
+        ...........feddfb4d4eef.
+        ..........c.eeddd4eeef..
+        ...cccccccceddee2222f...
+        ....cdddddcedd44e444f...
+        .....cccccc.eeeefffff...
+        ..........c...ffffffff..
+        ...............ff..fff..
+        `, SpriteKind.Hero)
+    tiles.placeOnTile(Hero, tiles.getTileLocation(8, 1))
+}
+sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_fight_dino1_button, function (sprite, otherSprite) {
+    if (controller.A.isPressed()) {
+        Dino_1_Status_Bar.value += randint(-20, -30)
+        destroyFightMenu()
+        pause(200)
+        createMenu()
+        shakeDino(Dino_1)
+    }
+})
+sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_fight_button, function (sprite, otherSprite) {
+    if (controller.A.isPressed()) {
+        isRun = 0
+        isFight = 1
+        pause(250)
+        createFightMenu()
+    }
+})
+sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_run_button, function (sprite, otherSprite) {
+    if (controller.A.isPressed()) {
+        isRun = 1
+        isFight = 0
+    }
+})
+function shakeDino (dinoX: Sprite) {
+    dinoX.setVelocity(-50, 0)
+    pause(100)
+    dinoX.setVelocity(0, 0)
+    pause(50)
+    dinoX.setVelocity(50, 0)
+    pause(103)
+    dinoX.setVelocity(0, 0)
+}
+function createEnemies () {
     Dino_1 = sprites.create(img`
         ........................
         ........................
@@ -69,126 +132,14 @@ function MakeEnemies () {
     Dino_2_Status_Bar.attachToSprite(Dino_2, -30, 0)
     Dino_2_Status_Bar.value = 100
     Dino_2_Status_Bar.setColor(7, 2)
-    Hero = sprites.create(img`
-        ...............ff.......
-        .............ff2ffff....
-        ............ff2feeeeff..
-        ...........ff22feeeeeff.
-        ...........feeeeffeeeef.
-        ..........fe2222eefffff.
-        ..........f2effff222efff
-        ..........fffeeeffffffff
-        ..........fee44fbe44efef
-        ...........feddfb4d4eef.
-        ..........c.eeddd4eeef..
-        ...cccccccceddee2222f...
-        ....cdddddcedd44e444f...
-        .....cccccc.eeeefffff...
-        ..........c...ffffffff..
-        ...............ff..fff..
-        `, SpriteKind.Hero)
-    tiles.placeOnTile(Hero, tiles.getTileLocation(8, 1))
-}
-sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_fight_dino1_button, function (sprite, otherSprite) {
-    if (Dino_1_Status_Bar.value <= 0) {
-        sprites.destroy(Dino_1_Button)
-    }
-    if (controller.A.isPressed()) {
-        Dino_1_Status_Bar.value += randint(-20, -30)
-        sprites.destroy(Dino_1_Button)
-        sprites.destroy(Dino_2_Button)
-        pause(250)
-        createMenu()
-        Dino_1.setVelocity(-50, 0)
-        pause(100)
-        Dino_1.setVelocity(0, 0)
-        pause(50)
-        Dino_1.setVelocity(50, 0)
-        pause(103)
-        Dino_1.setVelocity(0, 0)
-    }
-})
-sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_fight_button, function (sprite, otherSprite) {
-    if (controller.A.isPressed()) {
-        isRun = 0
-        isFight = 1
-        pause(250)
-        Fight()
-    }
-    if (Dino_1_Status_Bar.value <= 0) {
-        sprites.destroy(Dino_1, effects.fire, 500)
-    }
-})
-sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_run_button, function (sprite, otherSprite) {
-    if (controller.A.isPressed()) {
-        isRun = 1
-        isFight = 0
-    }
-    if (Dino_2_Status_Bar.value <= 0) {
-        sprites.destroy(Dino_2, effects.fire, 500)
-    }
-})
-function Fight () {
-    if (isFight == 1) {
-        sprites.destroy(fight)
-        sprites.destroy(run)
-        Dino_1_Button = sprites.create(img`
-            ..................................................
-            ..................................................
-            ..................................................
-            ..................................................
-            .11111....11...................11.11...11.........
-            .11..11.......................1111111.111.........
-            .11...11.111..11111...1111.....11.11...11.........
-            .11...11..11..11..11.11..11....11.11...11.........
-            .11...11..11..11..11.11..11....11.11...11.........
-            .11..11...11..11..11.11..11...1111111..11.........
-            .11111...1111.11..11..1111.....11.11..1111........
-            ..................................................
-            ..................................................
-            ..................................................
-            ..................................................
-            ..................................................
-            `, SpriteKind.menu_fight_dino1_button)
-        tiles.placeOnTile(Dino_1_Button, tiles.getTileLocation(6, 4))
-        Dino_2_Button = sprites.create(img`
-            ..................................................
-            ..................................................
-            ..................................................
-            ..................................................
-            .11111....11...................11.11...11111......
-            .11..11.......................1111111.11...11.....
-            .11...11.111..11111...1111.....11.11......111.....
-            .11...11..11..11..11.11..11....11.11....1111......
-            .11...11..11..11..11.11..11....11.11...1111.......
-            .11..11...11..11..11.11..11...1111111.111.........
-            .11111...1111.11..11..1111.....11.11..1111111.....
-            ..................................................
-            ..................................................
-            ..................................................
-            ..................................................
-            ..................................................
-            `, SpriteKind.menu_fight_dino2_button)
-        tiles.placeOnTile(Dino_2_Button, tiles.getTileLocation(6, 5))
-    }
 }
 sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_fight_dino2_button, function (sprite, otherSprite) {
-    if (Dino_2_Status_Bar.value <= 0) {
-        sprites.destroy(Dino_2_Button)
-    }
     if (controller.A.isPressed()) {
         Dino_2_Status_Bar.value += randint(-20, -30)
-        sprites.destroy(Dino_1_Button)
-        sprites.destroy(Dino_2_Button)
-        pause(250)
+        destroyFightMenu()
+        pause(200)
         createMenu()
-        Dino_2.setVelocity(-50, 0)
-        pause(100)
-        Dino_2.setVelocity(0, 0)
-        pause(50)
-        Dino_2.setVelocity(50, 0)
-        pause(103)
-        Dino_2.setVelocity(0, 0)
+        shakeDino(Dino_2)
     }
 })
 function createCursor () {
@@ -215,8 +166,12 @@ function createMenu () {
     run = sprites.create(assets.image`run`, SpriteKind.menu_run_button)
     tiles.placeOnTile(run, tiles.getTileLocation(5, 5))
 }
+function destroyMenu () {
+    sprites.destroy(fight)
+    sprites.destroy(run)
+}
 function createScene () {
-    scene.setBackgroundColor(15)
+    scene.setBackgroundColor(8)
     scene.setBackgroundImage(img`
         ................................................................................................................................................................
         .111111111111111111111111111111111111111111111111111111111111111111111111.1111111111111111111111111111111111111111111111111111111111111111111111111111111111111.
@@ -341,26 +296,76 @@ function createScene () {
         `)
     tiles.setCurrentTilemap(tilemap`level1`)
 }
-let cursor: Sprite = null
+function createFightMenu () {
+    if (isFight == 1) {
+        destroyMenu()
+        Dino_1_Button = sprites.create(img`
+            ..................................................
+            ..................................................
+            ..................................................
+            ..................................................
+            .11111....11...................11.11...11.........
+            .11..11.......................1111111.111.........
+            .11...11.111..11111...1111.....11.11...11.........
+            .11...11..11..11..11.11..11....11.11...11.........
+            .11...11..11..11..11.11..11....11.11...11.........
+            .11..11...11..11..11.11..11...1111111..11.........
+            .11111...1111.11..11..1111.....11.11..1111........
+            ..................................................
+            ..................................................
+            ..................................................
+            ..................................................
+            ..................................................
+            `, SpriteKind.menu_fight_dino1_button)
+        tiles.placeOnTile(Dino_1_Button, tiles.getTileLocation(6, 4))
+        Dino_2_Button = sprites.create(img`
+            ..................................................
+            ..................................................
+            ..................................................
+            ..................................................
+            .11111....11...................11.11...11111......
+            .11..11.......................1111111.11...11.....
+            .11...11.111..11111...1111.....11.11......111.....
+            .11...11..11..11..11.11..11....11.11....1111......
+            .11...11..11..11..11.11..11....11.11...1111.......
+            .11..11...11..11..11.11..11...1111111.111.........
+            .11111...1111.11..11..1111.....11.11..1111111.....
+            ..................................................
+            ..................................................
+            ..................................................
+            ..................................................
+            ..................................................
+            `, SpriteKind.menu_fight_dino2_button)
+        tiles.placeOnTile(Dino_2_Button, tiles.getTileLocation(6, 5))
+    }
+}
 let run: Sprite = null
 let fight: Sprite = null
+let cursor: Sprite = null
+let Dino_2: Sprite = null
 let isFight = 0
 let isRun = 0
-let Dino_2_Button: Sprite = null
-let Dino_1_Button: Sprite = null
-let Hero: Sprite = null
-let Dino_2_Status_Bar: StatusBarSprite = null
-let Dino_2: Sprite = null
-let Dino_1_Status_Bar: StatusBarSprite = null
 let Dino_1: Sprite = null
+let Hero: Sprite = null
+let Dino_2_Button: Sprite = null
+let Dino_2_Status_Bar: StatusBarSprite = null
+let Dino_1_Button: Sprite = null
+let Dino_1_Status_Bar: StatusBarSprite = null
 createScene()
 createCursor()
 createMenu()
-MakeEnemies()
+createEnemies()
+createHeroes()
 game.onUpdateInterval(50, function () {
     if (Dino_1_Status_Bar.value <= 0) {
         if (Dino_2_Status_Bar.value <= 0) {
             game.gameOver(true)
         }
+    }
+    if (Dino_1_Status_Bar.value <= 0) {
+        sprites.destroy(Dino_1, effects.fire, 500)
+    }
+    if (Dino_2_Status_Bar.value <= 0) {
+        sprites.destroy(Dino_2, effects.fire, 500)
     }
 })
