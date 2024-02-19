@@ -10,25 +10,17 @@ function doEnemiesTurn () {
     if (Dino_1_Status_Bar.value > 0) {
         roll20SidedDice()
         if (twentySidedDice > 2) {
-            hitText = textsprite.create("Hit")
-            tiles.placeOnTile(hitText, tiles.getTileLocation(1, 4))
-            animation.runMovementAnimation(
-            hitText,
-            animation.animationPresets(animation.easeUp),
-            1000,
-            false
-            )
             doDinoFightAnimation(Dino_1)
+            hitTextUp()
             scene.cameraShake(4, 500)
-            pause(500)
+            pause(1000)
         }
     }
-    pause(1000)
     if (Dino_2_Status_Bar.value > 0) {
         roll20SidedDice()
         if (twentySidedDice > 2) {
             doDinoFightAnimation(Dino_2)
-            pause(500)
+            hitTextUp()
             scene.cameraShake(4, 500)
         }
     }
@@ -202,6 +194,7 @@ sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_run_button, function (sprit
     if (controller.A.isPressed()) {
         isRun = 1
         isFight = 0
+        runButton()
     }
 })
 function shakeDino (dinoX: Sprite) {
@@ -212,6 +205,102 @@ function shakeDino (dinoX: Sprite) {
     dinoX.setVelocity(50, 0)
     pause(103)
     dinoX.setVelocity(0, 0)
+}
+function runButton () {
+    if (isRun == 1) {
+        roll20SidedDice()
+        if (twentySidedDice > 2) {
+            destroyMenu()
+            animation.runImageAnimation(
+            heros,
+            [img`
+                . . . . . . f f f f f f . . . . 
+                . . . . f f e e e e f 2 f . . . 
+                . . . f f e e e e f 2 2 2 f . . 
+                . . . f e e e f f e e e e f . . 
+                . . . f f f f e e 2 2 2 2 e f . 
+                . . . f e 2 2 2 f f f f e 2 f . 
+                . . f f f f f f f e e e f f f . 
+                . . f f e 4 4 e b f 4 4 e e f . 
+                . . f e e 4 d 4 1 f d d e f . . 
+                . . . f e e e 4 d d d d f . . . 
+                . . . . f f e e 4 4 4 e f . . . 
+                . . . . . 4 d d e 2 2 2 f . . . 
+                . . . . . e d d e 2 2 2 f . . . 
+                . . . . . f e e f 4 5 5 f . . . 
+                . . . . . . f f f f f f . . . . 
+                . . . . . . . f f f . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . f f f f f f . . . . 
+                . . . . f f e e e e f 2 f . . . 
+                . . . f f e e e e f 2 2 2 f . . 
+                . . . f e e e f f e e e e f . . 
+                . . . f f f f e e 2 2 2 2 e f . 
+                . . . f e 2 2 2 f f f f e 2 f . 
+                . . f f f f f f f e e e f f f . 
+                . . f f e 4 4 e b f 4 4 e e f . 
+                . . f e e 4 d 4 1 f d d e f . . 
+                . . . f e e e e e d d d f . . . 
+                . . . . . f 4 d d e 4 e f . . . 
+                . . . . . f e d d e 2 2 f . . . 
+                . . . . f f f e e f 5 5 f f . . 
+                . . . . f f f f f f f f f f . . 
+                . . . . . f f . . . f f f . . . 
+                `,img`
+                . . . . . . f f f f f f . . . . 
+                . . . . f f e e e e f 2 f . . . 
+                . . . f f e e e e f 2 2 2 f . . 
+                . . . f e e e f f e e e e f . . 
+                . . . f f f f e e 2 2 2 2 e f . 
+                . . . f e 2 2 2 f f f f e 2 f . 
+                . . f f f f f f f e e e f f f . 
+                . . f f e 4 4 e b f 4 4 e e f . 
+                . . f e e 4 d 4 1 f d d e f . . 
+                . . . f e e e 4 d d d d f . . . 
+                . . . . f f e e 4 4 4 e f . . . 
+                . . . . . 4 d d e 2 2 2 f . . . 
+                . . . . . e d d e 2 2 2 f . . . 
+                . . . . . f e e f 4 5 5 f . . . 
+                . . . . . . f f f f f f . . . . 
+                . . . . . . . f f f . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . f f f f f f . . . . 
+                . . . . f f e e e e f 2 f . . . 
+                . . . f f e e e e f 2 2 2 f . . 
+                . . . f e e e f f e e e e f . . 
+                . . . f f f f e e 2 2 2 2 e f . 
+                . . . f e 2 2 2 f f f f e 2 f . 
+                . . f f f f f f f e e e f f f . 
+                . . f f e 4 4 e b f 4 4 e e f . 
+                . . f e e 4 d 4 1 f d d e f . . 
+                . . . f e e e 4 d d d d f . . . 
+                . . . . 4 d d e 4 4 4 e f . . . 
+                . . . . e d d e 2 2 2 2 f . . . 
+                . . . . f e e f 4 4 5 5 f f . . 
+                . . . . f f f f f f f f f f . . 
+                . . . . . f f . . . f f f . . . 
+                `],
+            200,
+            true
+            )
+            heros.setVelocity(50, 0)
+            pause(1000)
+            game.setGameOverMessage(true, "YOU RAN")
+            game.setGameOverEffect(true, effects.none)
+            game.gameOver(true)
+        } else {
+            hitText = textsprite.create("Run Failed")
+            tiles.placeOnTile(hitText, tiles.getTileLocation(1, 4))
+            animation.runMovementAnimation(
+            hitText,
+            animation.animationPresets(animation.easeUp),
+            2000,
+            false
+            )
+        }
+    }
 }
 function createEnemies (hitPoints: number) {
     Dino_1 = sprites.create(img`
@@ -503,6 +592,16 @@ function destroyMenu () {
     sprites.destroy(fight)
     sprites.destroy(run)
 }
+function hitTextUp () {
+    hitText = textsprite.create("Hit")
+    tiles.placeOnTile(hitText, tiles.getTileLocation(1, 4))
+    animation.runMovementAnimation(
+    hitText,
+    animation.animationPresets(animation.easeUp),
+    2000,
+    false
+    )
+}
 function createScene () {
     scene.setBackgroundColor(8)
     scene.setBackgroundImage(img`
@@ -632,48 +731,52 @@ function createScene () {
 function createFightMenu () {
     if (isFight == 1) {
         destroyMenu()
-        Dino_1_Button = sprites.create(img`
-            ..................................................
-            ..................................................
-            ..................................................
-            ..................................................
-            .11111....11...................11.11...11.........
-            .11..11.......................1111111.111.........
-            .11...11.111..11111...1111.....11.11...11.........
-            .11...11..11..11..11.11..11....11.11...11.........
-            .11...11..11..11..11.11..11....11.11...11.........
-            .11..11...11..11..11.11..11...1111111..11.........
-            .11111...1111.11..11..1111.....11.11..1111........
-            ..................................................
-            ..................................................
-            ..................................................
-            ..................................................
-            ..................................................
-            `, SpriteKind.menu_fight_dino1_button)
-        tiles.placeOnTile(Dino_1_Button, tiles.getTileLocation(6, 4))
-        Dino_2_Button = sprites.create(img`
-            ..................................................
-            ..................................................
-            ..................................................
-            ..................................................
-            .11111....11...................11.11...11111......
-            .11..11.......................1111111.11...11.....
-            .11...11.111..11111...1111.....11.11......111.....
-            .11...11..11..11..11.11..11....11.11....1111......
-            .11...11..11..11..11.11..11....11.11...1111.......
-            .11..11...11..11..11.11..11...1111111.111.........
-            .11111...1111.11..11..1111.....11.11..1111111.....
-            ..................................................
-            ..................................................
-            ..................................................
-            ..................................................
-            ..................................................
-            `, SpriteKind.menu_fight_dino2_button)
-        tiles.placeOnTile(Dino_2_Button, tiles.getTileLocation(6, 5))
+        if (Dino_1_Status_Bar.value > 0) {
+            Dino_1_Button = sprites.create(img`
+                ..................................................
+                ..................................................
+                ..................................................
+                ..................................................
+                .11111....11...................11.11...11.........
+                .11..11.......................1111111.111.........
+                .11...11.111..11111...1111.....11.11...11.........
+                .11...11..11..11..11.11..11....11.11...11.........
+                .11...11..11..11..11.11..11....11.11...11.........
+                .11..11...11..11..11.11..11...1111111..11.........
+                .11111...1111.11..11..1111.....11.11..1111........
+                ..................................................
+                ..................................................
+                ..................................................
+                ..................................................
+                ..................................................
+                `, SpriteKind.menu_fight_dino1_button)
+            tiles.placeOnTile(Dino_1_Button, tiles.getTileLocation(6, 4))
+        }
+        if (Dino_2_Status_Bar.value > 0) {
+            Dino_2_Button = sprites.create(img`
+                ..................................................
+                ..................................................
+                ..................................................
+                ..................................................
+                .11111....11...................11.11...11111......
+                .11..11.......................1111111.11...11.....
+                .11...11.111..11111...1111.....11.11......111.....
+                .11...11..11..11..11.11..11....11.11....1111......
+                .11...11..11..11..11.11..11....11.11...1111.......
+                .11..11...11..11..11.11..11...1111111.111.........
+                .11111...1111.11..11..1111.....11.11..1111111.....
+                ..................................................
+                ..................................................
+                ..................................................
+                ..................................................
+                ..................................................
+                `, SpriteKind.menu_fight_dino2_button)
+            tiles.placeOnTile(Dino_2_Button, tiles.getTileLocation(6, 5))
+        }
     }
 }
 // TODO:
-// - Implement run away animation where hero goes to the right off screen
+// - Implement run-away animation where hero goes to the right off screen - Done (Needs organizing)
 // - Create Magic button on Main Menu and create Magic Menu
 // - Hero to take a hit point change from dino
 // - Create Item button on Main Menu and create Item Menu
@@ -696,6 +799,7 @@ function createFightMenu () {
 let run: Sprite = null
 let fight: Sprite = null
 let cursor: Sprite = null
+let hitText: TextSprite = null
 let isFight = 0
 let isRun = 0
 let heroStatusBar: StatusBarSprite = null
@@ -705,7 +809,6 @@ let Dino_1_Button: Sprite = null
 let Dino_2: Sprite = null
 let Dino_2_Status_Bar: StatusBarSprite = null
 let Dino_1: Sprite = null
-let hitText: TextSprite = null
 let twentySidedDice = 0
 let Dino_1_Status_Bar: StatusBarSprite = null
 createScene()
@@ -713,6 +816,7 @@ createCursor()
 createMenu()
 createEnemies(30)
 createHeroes(100)
+// - 50ms (or 1/20th of a second) is known as a "tick"
 game.onUpdateInterval(50, function () {
     if (Dino_1_Status_Bar.value <= 0) {
         if (Dino_2_Status_Bar.value <= 0) {
