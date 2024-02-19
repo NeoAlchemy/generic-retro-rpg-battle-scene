@@ -7,18 +7,30 @@ namespace SpriteKind {
     export const menu_fight_dino2_button = SpriteKind.create()
 }
 function doEnemiesTurn () {
-    roll20SidedDice()
-    if (twentySidedDice > 2) {
-        doDinoFightAnimation(Dino_1)
-        pause(500)
-        scene.cameraShake(4, 500)
+    if (Dino_1_Status_Bar.value > 0) {
+        roll20SidedDice()
+        if (twentySidedDice > 2) {
+            hitText = textsprite.create("Hit")
+            tiles.placeOnTile(hitText, tiles.getTileLocation(1, 4))
+            animation.runMovementAnimation(
+            hitText,
+            animation.animationPresets(animation.easeUp),
+            1000,
+            false
+            )
+            doDinoFightAnimation(Dino_1)
+            scene.cameraShake(4, 500)
+            pause(500)
+        }
     }
     pause(1000)
-    roll20SidedDice()
-    if (twentySidedDice > 2) {
-        doDinoFightAnimation(Dino_2)
-        pause(500)
-        scene.cameraShake(4, 500)
+    if (Dino_2_Status_Bar.value > 0) {
+        roll20SidedDice()
+        if (twentySidedDice > 2) {
+            doDinoFightAnimation(Dino_2)
+            pause(500)
+            scene.cameraShake(4, 500)
+        }
     }
 }
 function destroyFightMenu () {
@@ -31,7 +43,7 @@ function destroyFightMenu () {
     sprites.destroy(Dino_1_Button)
     sprites.destroy(Dino_2_Button)
 }
-function createHeroes () {
+function createHeroes (hitPoints: number) {
     heros = sprites.create(img`
         ...............ff.......
         .............ff2ffff....
@@ -51,6 +63,10 @@ function createHeroes () {
         ...............ff..fff..
         `, SpriteKind.Hero)
     tiles.placeOnTile(heros, tiles.getTileLocation(8, 1))
+    heroStatusBar = statusbars.create(20, 4, StatusBarKind.Health)
+    heroStatusBar.attachToSprite(heros, -22, 0)
+    heroStatusBar.max = hitPoints
+    heroStatusBar.setColor(7, 2)
 }
 sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_fight_dino1_button, function (sprite, otherSprite) {
     if (controller.A.isPressed()) {
@@ -197,7 +213,7 @@ function shakeDino (dinoX: Sprite) {
     pause(103)
     dinoX.setVelocity(0, 0)
 }
-function createEnemies () {
+function createEnemies (hitPoints: number) {
     Dino_1 = sprites.create(img`
         ........................
         ........................
@@ -225,9 +241,9 @@ function createEnemies () {
         ........cdd555dc........
         `, SpriteKind.Enemy)
     tiles.placeOnTile(Dino_1, tiles.getTileLocation(1, 0))
-    Dino_1_Status_Bar = statusbars.create(20, 4, StatusBarKind.Health)
+    Dino_1_Status_Bar = statusbars.create(20, 4, StatusBarKind.EnemyHealth)
     Dino_1_Status_Bar.attachToSprite(Dino_1, -30, 0)
-    Dino_1_Status_Bar.value = 100
+    Dino_1_Status_Bar.max = hitPoints
     Dino_1_Status_Bar.setColor(7, 2)
     Dino_2 = sprites.create(img`
         ........................
@@ -256,9 +272,9 @@ function createEnemies () {
         ........cdd555dc........
         `, SpriteKind.Enemy)
     tiles.placeOnTile(Dino_2, tiles.getTileLocation(1, 2))
-    Dino_2_Status_Bar = statusbars.create(20, 4, StatusBarKind.Health)
+    Dino_2_Status_Bar = statusbars.create(20, 4, StatusBarKind.EnemyHealth)
     Dino_2_Status_Bar.attachToSprite(Dino_2, -30, 0)
-    Dino_2_Status_Bar.value = 100
+    Dino_2_Status_Bar.max = hitPoints
     Dino_2_Status_Bar.setColor(7, 2)
 }
 function roll20SidedDice () {
@@ -659,13 +675,17 @@ function createFightMenu () {
 // TODO:
 // - Implement run away animation where hero goes to the right off screen
 // - Create Magic button on Main Menu and create Magic Menu
-// - Give Dinos an attack turn
-// - Randomize attack value based on a "20 sided dice". (requires conversation)
+// - Hero to take a hit point change from dino
 // - Create Item button on Main Menu and create Item Menu
 // - Decorations at top based on surroundings
 // - Implement Magic on hero and dino
 // - Implement Item on hero and dino
+// - add Hit or Miss text for Enemy and Hero
+// - use animation shake instead of creating function or shake camera for character
+// - organize functions by similar functions in a column order
 // - Pick enemies from cursor instead of through menu (requires conversation)
+// - Randomize attack hit point value based on a "20 sided dice". (requires conversation)
+// 
 // 
 // LATER:
 // Implement an RPG world
@@ -678,19 +698,21 @@ let fight: Sprite = null
 let cursor: Sprite = null
 let isFight = 0
 let isRun = 0
+let heroStatusBar: StatusBarSprite = null
 let heros: Sprite = null
 let Dino_2_Button: Sprite = null
-let Dino_2_Status_Bar: StatusBarSprite = null
 let Dino_1_Button: Sprite = null
-let Dino_1_Status_Bar: StatusBarSprite = null
 let Dino_2: Sprite = null
+let Dino_2_Status_Bar: StatusBarSprite = null
 let Dino_1: Sprite = null
+let hitText: TextSprite = null
 let twentySidedDice = 0
+let Dino_1_Status_Bar: StatusBarSprite = null
 createScene()
 createCursor()
 createMenu()
-createEnemies()
-createHeroes()
+createEnemies(30)
+createHeroes(100)
 game.onUpdateInterval(50, function () {
     if (Dino_1_Status_Bar.value <= 0) {
         if (Dino_2_Status_Bar.value <= 0) {
