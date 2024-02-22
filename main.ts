@@ -35,6 +35,119 @@ function destroyFightMenu () {
     sprites.destroy(Dino_1_Button)
     sprites.destroy(Dino_2_Button)
 }
+function doHeroDamage () {
+    roll20SidedDice()
+    if (twentySidedDice < 2) {
+        currentAttackValue = -1
+    } else if (twentySidedDice >= 19) {
+        rollNSidedDice(8)
+        currentAttackValue = nSidedDice + 3
+        rollNSidedDice(8)
+        currentAttackValue = nSidedDice + 3
+    } else if (twentySidedDice >= dino_AC) {
+        rollNSidedDice(8)
+        currentAttackValue = nSidedDice + 3
+    } else {
+        currentAttackValue = 0
+    }
+    console.logValue("currentAttackValue", currentAttackValue)
+}
+function doRun () {
+    if (isRun == 1) {
+        roll20SidedDice()
+        if (twentySidedDice > 2) {
+            destroyMenu()
+            animation.runImageAnimation(
+            heros,
+            [img`
+                . . . . . . f f f f f f . . . . 
+                . . . . f f e e e e f 2 f . . . 
+                . . . f f e e e e f 2 2 2 f . . 
+                . . . f e e e f f e e e e f . . 
+                . . . f f f f e e 2 2 2 2 e f . 
+                . . . f e 2 2 2 f f f f e 2 f . 
+                . . f f f f f f f e e e f f f . 
+                . . f f e 4 4 e b f 4 4 e e f . 
+                . . f e e 4 d 4 1 f d d e f . . 
+                . . . f e e e 4 d d d d f . . . 
+                . . . . f f e e 4 4 4 e f . . . 
+                . . . . . 4 d d e 2 2 2 f . . . 
+                . . . . . e d d e 2 2 2 f . . . 
+                . . . . . f e e f 4 5 5 f . . . 
+                . . . . . . f f f f f f . . . . 
+                . . . . . . . f f f . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . f f f f f f . . . . 
+                . . . . f f e e e e f 2 f . . . 
+                . . . f f e e e e f 2 2 2 f . . 
+                . . . f e e e f f e e e e f . . 
+                . . . f f f f e e 2 2 2 2 e f . 
+                . . . f e 2 2 2 f f f f e 2 f . 
+                . . f f f f f f f e e e f f f . 
+                . . f f e 4 4 e b f 4 4 e e f . 
+                . . f e e 4 d 4 1 f d d e f . . 
+                . . . f e e e e e d d d f . . . 
+                . . . . . f 4 d d e 4 e f . . . 
+                . . . . . f e d d e 2 2 f . . . 
+                . . . . f f f e e f 5 5 f f . . 
+                . . . . f f f f f f f f f f . . 
+                . . . . . f f . . . f f f . . . 
+                `,img`
+                . . . . . . f f f f f f . . . . 
+                . . . . f f e e e e f 2 f . . . 
+                . . . f f e e e e f 2 2 2 f . . 
+                . . . f e e e f f e e e e f . . 
+                . . . f f f f e e 2 2 2 2 e f . 
+                . . . f e 2 2 2 f f f f e 2 f . 
+                . . f f f f f f f e e e f f f . 
+                . . f f e 4 4 e b f 4 4 e e f . 
+                . . f e e 4 d 4 1 f d d e f . . 
+                . . . f e e e 4 d d d d f . . . 
+                . . . . f f e e 4 4 4 e f . . . 
+                . . . . . 4 d d e 2 2 2 f . . . 
+                . . . . . e d d e 2 2 2 f . . . 
+                . . . . . f e e f 4 5 5 f . . . 
+                . . . . . . f f f f f f . . . . 
+                . . . . . . . f f f . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . f f f f f f . . . . 
+                . . . . f f e e e e f 2 f . . . 
+                . . . f f e e e e f 2 2 2 f . . 
+                . . . f e e e f f e e e e f . . 
+                . . . f f f f e e 2 2 2 2 e f . 
+                . . . f e 2 2 2 f f f f e 2 f . 
+                . . f f f f f f f e e e f f f . 
+                . . f f e 4 4 e b f 4 4 e e f . 
+                . . f e e 4 d 4 1 f d d e f . . 
+                . . . f e e e 4 d d d d f . . . 
+                . . . . 4 d d e 4 4 4 e f . . . 
+                . . . . e d d e 2 2 2 2 f . . . 
+                . . . . f e e f 4 4 5 5 f f . . 
+                . . . . f f f f f f f f f f . . 
+                . . . . . f f . . . f f f . . . 
+                `],
+            200,
+            true
+            )
+            heros.setVelocity(50, 0)
+            pause(1000)
+            game.setGameOverMessage(true, "YOU RAN")
+            game.setGameOverEffect(true, effects.none)
+            game.gameOver(true)
+        } else {
+            hitText = textsprite.create("Run Failed")
+            tiles.placeOnTile(hitText, tiles.getTileLocation(1, 4))
+            animation.runMovementAnimation(
+            hitText,
+            animation.animationPresets(animation.easeUp),
+            2000,
+            false
+            )
+        }
+    }
+}
 function createHeroes (hitPoints: number) {
     heros = sprites.create(img`
         ...............ff.......
@@ -62,7 +175,15 @@ function createHeroes (hitPoints: number) {
 }
 sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_fight_dino1_button, function (sprite, otherSprite) {
     if (controller.A.isPressed()) {
-        Dino_1_Status_Bar.value += randint(-20, -30)
+        doHeroDamage()
+        if (currentAttackValue == -1) {
+            floatTextUp("miss")
+        } else if (currentAttackValue == 0) {
+            floatTextUp("no damage")
+        } else {
+            floatTextUp(convertToText(currentAttackValue))
+            Dino_1_Status_Bar.value += currentAttackValue
+        }
         destroyFightMenu()
         pause(200)
         createMenu()
@@ -194,7 +315,7 @@ sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_run_button, function (sprit
     if (controller.A.isPressed()) {
         isRun = 1
         isFight = 0
-        runButton()
+        doRun()
     }
 })
 function shakeDino (dinoX: Sprite) {
@@ -206,101 +327,8 @@ function shakeDino (dinoX: Sprite) {
     pause(103)
     dinoX.setVelocity(0, 0)
 }
-function runButton () {
-    if (isRun == 1) {
-        roll20SidedDice()
-        if (twentySidedDice > 2) {
-            destroyMenu()
-            animation.runImageAnimation(
-            heros,
-            [img`
-                . . . . . . f f f f f f . . . . 
-                . . . . f f e e e e f 2 f . . . 
-                . . . f f e e e e f 2 2 2 f . . 
-                . . . f e e e f f e e e e f . . 
-                . . . f f f f e e 2 2 2 2 e f . 
-                . . . f e 2 2 2 f f f f e 2 f . 
-                . . f f f f f f f e e e f f f . 
-                . . f f e 4 4 e b f 4 4 e e f . 
-                . . f e e 4 d 4 1 f d d e f . . 
-                . . . f e e e 4 d d d d f . . . 
-                . . . . f f e e 4 4 4 e f . . . 
-                . . . . . 4 d d e 2 2 2 f . . . 
-                . . . . . e d d e 2 2 2 f . . . 
-                . . . . . f e e f 4 5 5 f . . . 
-                . . . . . . f f f f f f . . . . 
-                . . . . . . . f f f . . . . . . 
-                `,img`
-                . . . . . . . . . . . . . . . . 
-                . . . . . . f f f f f f . . . . 
-                . . . . f f e e e e f 2 f . . . 
-                . . . f f e e e e f 2 2 2 f . . 
-                . . . f e e e f f e e e e f . . 
-                . . . f f f f e e 2 2 2 2 e f . 
-                . . . f e 2 2 2 f f f f e 2 f . 
-                . . f f f f f f f e e e f f f . 
-                . . f f e 4 4 e b f 4 4 e e f . 
-                . . f e e 4 d 4 1 f d d e f . . 
-                . . . f e e e e e d d d f . . . 
-                . . . . . f 4 d d e 4 e f . . . 
-                . . . . . f e d d e 2 2 f . . . 
-                . . . . f f f e e f 5 5 f f . . 
-                . . . . f f f f f f f f f f . . 
-                . . . . . f f . . . f f f . . . 
-                `,img`
-                . . . . . . f f f f f f . . . . 
-                . . . . f f e e e e f 2 f . . . 
-                . . . f f e e e e f 2 2 2 f . . 
-                . . . f e e e f f e e e e f . . 
-                . . . f f f f e e 2 2 2 2 e f . 
-                . . . f e 2 2 2 f f f f e 2 f . 
-                . . f f f f f f f e e e f f f . 
-                . . f f e 4 4 e b f 4 4 e e f . 
-                . . f e e 4 d 4 1 f d d e f . . 
-                . . . f e e e 4 d d d d f . . . 
-                . . . . f f e e 4 4 4 e f . . . 
-                . . . . . 4 d d e 2 2 2 f . . . 
-                . . . . . e d d e 2 2 2 f . . . 
-                . . . . . f e e f 4 5 5 f . . . 
-                . . . . . . f f f f f f . . . . 
-                . . . . . . . f f f . . . . . . 
-                `,img`
-                . . . . . . . . . . . . . . . . 
-                . . . . . . f f f f f f . . . . 
-                . . . . f f e e e e f 2 f . . . 
-                . . . f f e e e e f 2 2 2 f . . 
-                . . . f e e e f f e e e e f . . 
-                . . . f f f f e e 2 2 2 2 e f . 
-                . . . f e 2 2 2 f f f f e 2 f . 
-                . . f f f f f f f e e e f f f . 
-                . . f f e 4 4 e b f 4 4 e e f . 
-                . . f e e 4 d 4 1 f d d e f . . 
-                . . . f e e e 4 d d d d f . . . 
-                . . . . 4 d d e 4 4 4 e f . . . 
-                . . . . e d d e 2 2 2 2 f . . . 
-                . . . . f e e f 4 4 5 5 f f . . 
-                . . . . f f f f f f f f f f . . 
-                . . . . . f f . . . f f f . . . 
-                `],
-            200,
-            true
-            )
-            heros.setVelocity(50, 0)
-            pause(1000)
-            game.setGameOverMessage(true, "YOU RAN")
-            game.setGameOverEffect(true, effects.none)
-            game.gameOver(true)
-        } else {
-            hitText = textsprite.create("Run Failed")
-            tiles.placeOnTile(hitText, tiles.getTileLocation(1, 4))
-            animation.runMovementAnimation(
-            hitText,
-            animation.animationPresets(animation.easeUp),
-            2000,
-            false
-            )
-        }
-    }
+function rollNSidedDice (maxDice: number) {
+    nSidedDice = randint(1, maxDice)
 }
 function createEnemies (hitPoints: number) {
     Dino_1 = sprites.create(img`
@@ -368,6 +396,7 @@ function createEnemies (hitPoints: number) {
 }
 function roll20SidedDice () {
     twentySidedDice = randint(1, 20)
+    console.logValue("twentySidedDice", twentySidedDice)
 }
 function doDinoFightAnimation (enemyX: Sprite) {
     animation.runImageAnimation(
@@ -554,7 +583,15 @@ function doDinoFightAnimation (enemyX: Sprite) {
 }
 sprites.onOverlap(SpriteKind.cursor, SpriteKind.menu_fight_dino2_button, function (sprite, otherSprite) {
     if (controller.A.isPressed()) {
-        Dino_2_Status_Bar.value += randint(-20, -30)
+        doHeroDamage()
+        if (currentAttackValue == -1) {
+            floatTextUp("miss")
+        } else if (currentAttackValue == 0) {
+            floatTextUp("no damage")
+        } else {
+            floatTextUp(convertToText(currentAttackValue))
+            Dino_2_Status_Bar.value += currentAttackValue
+        }
         destroyFightMenu()
         pause(200)
         createMenu()
@@ -581,6 +618,16 @@ function createCursor () {
         `, SpriteKind.cursor)
     tiles.placeOnTile(cursor, tiles.getTileLocation(7, 5))
     controller.moveSprite(cursor)
+}
+function floatTextUp (floatingText: string) {
+    missText = textsprite.create(floatingText)
+    tiles.placeOnTile(missText, tiles.getTileLocation(1, 4))
+    animation.runMovementAnimation(
+    missText,
+    animation.animationPresets(animation.easeUp),
+    2000,
+    false
+    )
 }
 function createMenu () {
     fight = sprites.create(assets.image`fight`, SpriteKind.menu_fight_button)
@@ -788,7 +835,8 @@ function createFightMenu () {
 // - organize functions by similar functions in a column order
 // - Pick enemies from cursor instead of through menu (requires conversation)
 // - Randomize attack hit point value based on a "20 sided dice". (requires conversation)
-// 
+// - reduce duplicate hit and mis text, make the function generic for text and position
+// - make dice rolls generic
 // 
 // LATER:
 // Implement an RPG world
@@ -798,12 +846,14 @@ function createFightMenu () {
 // Allow for 1 - N enemies
 let run: Sprite = null
 let fight: Sprite = null
+let missText: TextSprite = null
 let cursor: Sprite = null
-let hitText: TextSprite = null
 let isFight = 0
-let isRun = 0
 let heroStatusBar: StatusBarSprite = null
+let hitText: TextSprite = null
 let heros: Sprite = null
+let isRun = 0
+let nSidedDice = 0
 let Dino_2_Button: Sprite = null
 let Dino_1_Button: Sprite = null
 let Dino_2: Sprite = null
@@ -811,11 +861,20 @@ let Dino_2_Status_Bar: StatusBarSprite = null
 let Dino_1: Sprite = null
 let twentySidedDice = 0
 let Dino_1_Status_Bar: StatusBarSprite = null
+let currentAttackValue = 0
+let dino_AC = 0
+dino_AC = 13
+let dino_HP = 15
+let dino_damage = "1d6"
+let hero_AC = 16
+let hero_HP = 12
+let hero_damage = "1d8+3"
+currentAttackValue = 0
 createScene()
 createCursor()
 createMenu()
-createEnemies(30)
-createHeroes(100)
+createEnemies(dino_HP)
+createHeroes(hero_HP)
 // - 50ms (or 1/20th of a second) is known as a "tick"
 game.onUpdateInterval(50, function () {
     if (Dino_1_Status_Bar.value <= 0) {
